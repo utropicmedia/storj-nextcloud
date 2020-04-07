@@ -1,18 +1,14 @@
 package main
 
 import (
-	//Standard Packages
-
 	"fmt"
 	"io"
 	"io/ioutil"
 	"log"
 	"os"
-
-	"github.com/utropicmedia/Nextcloud_storj_interface/nextcloud"
-	"github.com/utropicmedia/Nextcloud_storj_interface/storj"
-
 	"github.com/urfave/cli"
+	"utropicmedia.com/storj-nextcloud/utropicmedia/Nextcloud_storj_interface/nextcloud"
+	"utropicmedia.com/storj-nextcloud/utropicmedia/Nextcloud_storj_interface/storj"
 )
 
 var gbDEBUG = false
@@ -27,7 +23,7 @@ var app = cli.NewApp()
 func setAppInfo() {
 	app.Name = "Storj NextCloud Connector"
 	app.Usage = "Backup your NextCloud collections to the decentralized Storj network"
-	app.Authors = []*cli.Author{{Name: "Satyam Shivam - Utropicmedia", Email: "development@utropicmedia.com"}}
+	//app.Authors = []*cli.Author{{Name: "Satyam Shivam - Utropicmedia", Email: "development@utropicmedia.com"}}
 	app.Version = "1.0.0"
 }
 
@@ -37,10 +33,19 @@ func setDebug(debugVal bool) {
 	storj.DEBUG = debugVal
 }
 
+func trimLeftChar(s string) string {
+    for i := range s {
+        if i > 0 {
+            return s[i:]
+        }
+    }
+    return s[:0]
+}
+
 // setCommands sets various command-line options for the app.
 func setCommands() {
 
-	app.Commands = []*cli.Command{
+	app.Commands = []cli.Command{
 		{
 			Name:    "parse",
 			Aliases: []string{"p"},
@@ -50,6 +55,7 @@ func setCommands() {
 			Action: func(cliContext *cli.Context) error {
 				var fullFileName = nextcloudConfigFile
 
+				/*
 				// process arguments
 				if len(cliContext.Args().Slice()) > 0 {
 					for i := 0; i < len(cliContext.Args().Slice()); i++ {
@@ -61,6 +67,7 @@ func setCommands() {
 						}
 					}
 				}
+				*/
 
 				// Establish connection with NextCloud and get a new client.
 				nextCloudClient, err := nextcloud.ConnectToNextCloud(fullFileName)
@@ -72,7 +79,7 @@ func setCommands() {
 
 				}
 				// Generate a list of all files with their corresponidng paths
-				nextcloud.ListDirectory(nextCloudClient, "/")
+				nextcloud.ListDirectory(*nextCloudClient, "/")
 
 				return err
 			},
@@ -88,11 +95,14 @@ func setCommands() {
 
 				// Default Storj configuration file name.
 				var fullFileName = storjConfigFile
+				/*
 				var foundFirstFileName = false
 				var foundSecondFileName = false
+				*/
 				var keyValue string
 				var restrict string
 
+				/*
 				// process arguments
 				if len(cliContext.Args().Slice()) > 0 {
 					for i := 0; i < len(cliContext.Args().Slice()); i++ {
@@ -116,6 +126,9 @@ func setCommands() {
 						}
 					}
 				}
+				*/
+
+
 				// Sample test file and data to be uploaded
 				sampleFileName := "testfile"
 				testFile := []byte("Hello Storj")
@@ -163,11 +176,18 @@ func setCommands() {
 				var filePath string
 				var fileNamesDEBUG []string
 
+				/*
 				// process arguments - Reading fileName from the command line.
 				var foundFirstFileName = false
 				var foundSecondFileName = false
 				var foundThirdFileName = false
-				var foundFilePath = false
+				*/
+
+
+				var foundFilePath = true
+				filePath = "/"
+				/*
+
 				if len(cliContext.Args().Slice()) > 0 {
 					for i := 0; i < len(cliContext.Args().Slice()); i++ {
 						// Incase debug is provided as argument.
@@ -198,6 +218,9 @@ func setCommands() {
 						}
 					}
 				}
+				*/
+
+
 
 				if !foundFilePath {
 					log.Fatal("Please enter the file/root address for back-up. Terminating Application...")
@@ -210,7 +233,7 @@ func setCommands() {
 				}
 
 				// Create a list of all files with their respective paths for transfer to Storj
-				err = nextcloud.GetFilesWithPaths(nextCloudClient, filePath)
+				err = nextcloud.GetFilesWithPaths(*nextCloudClient, filePath)
 				if err != nil {
 					log.Fatal("Path/directory not found. Terminating...")
 				}
@@ -224,13 +247,13 @@ func setCommands() {
 
 					file := nextcloud.AllFilesWithPaths[i]
 
-					nextCloudReader := nextcloud.GetReader(nextCloudClient, file)
+					nextCloudReader := nextcloud.GetReader(*nextCloudClient, file)
 					//Buffer to read file in chunks of bytes
 					buffer := make([]byte, 1000000)
 					for {
 						num, err := nextCloudReader.Read(buffer) //Returns Number of Bytes Read from file
 						if len(buffer[:num]) > 0 {
-							storj.ConnectUpload(ctx, bucket, buffer[:num], file, fileNamesDEBUG, storjConfig, err) //Upload the chunks of bytes read by Reader
+							storj.ConnectUpload(ctx, bucket, buffer[:num], trimLeftChar(file), fileNamesDEBUG, storjConfig, err) //Upload the chunks of bytes read by Reader
 						}
 						if err == io.EOF {
 							break

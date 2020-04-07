@@ -75,7 +75,7 @@ func ConnectStorjReadUploadData(fullFileName string, keyValue string, restrict s
 
 	var cfg uplink.Config
 	// Configure the partner id
-	cfg.Volatile.UserAgent = "NextCloud"
+	cfg.Volatile.UserAgent = "Nextcloud"
 
 	ctx := context.Background()
 
