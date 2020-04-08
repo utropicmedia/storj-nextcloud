@@ -9,7 +9,7 @@ import (
 	"os"
 
 	//External Packages
-	"github.com/partitio/gonextcloud"
+	"gitlab.bertha.cloud/partitio/Nextcloud-Partitio/gonextcloud"
 )
 
 // ConfigNextCloud defines the variables and types for login.
@@ -68,12 +68,14 @@ func (r *Reader) Read(buff []byte) (n int, err error) {
 
 //ConnectToNextCloud : Connect to NextCloud by creating a new authenticated NextCloud client
 // It returns a NextCloud client instance to perform file transfer(back-up)
-func ConnectToNextCloud(fullFileName string) (gonextcloud.Client, error) {
+func ConnectToNextCloud(fullFileName string) (*gonextcloud.Client, error) {
 	configNextCloud, err := LoadNextCloudProperty(fullFileName)
 	//
 	if err != nil {
 		log.Printf("Loading NextCloudProperty: %s\n", err)
-		return nil, err
+
+		panic("LoadNextCloudProperty() failed")
+		// return nil, err
 	}
 
 	fmt.Println("Connecting to NextCloud...")

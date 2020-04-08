@@ -6,23 +6,17 @@ Make sure your `PATH` includes the `$GOPATH/bin` directory, so that your command
 $ export PATH=$PATH:$GOPATH/bin
 ```
 
-Install [github.com/urfave/cli](https://github.com/urfave/cli), by running:
-```
-$ go get github.com/urfave/cli
-```
+Install dependencies.
 
-Install [gonextcloud](github.com/partitio/gonextcloud) go package, by running:
 ```
-$ go get github.com/partitio/gonextcloud
+$ go get
 ```
-
 
 ## Build ONCE
-```
-$ go build storj-nextcloud.go
-```
 
-
+```
+$ go build storj-nextcloud/storj-nextcloud.go
+```
 
 ## Set-up Files
 * Create a `nextcloud_property.json` file with following contents about a NextCloud instance:
@@ -30,7 +24,7 @@ $ go build storj-nextcloud.go
     * username :- User ID of the nextcloud account
     * password :- Password of the nextcloud account
 ```json
-    { 
+    {
         "url": "https://my_nextcloud.com/", //URL should be uptil the third slash only
         "username": "username",
         "password": "password"
@@ -48,8 +42,8 @@ $ go build storj-nextcloud.go
     * disallowWrites:- Set true to create serialized scope key with restricted write access
     * disallowDeletes:- Set true to create serialized scope key with restricted delete access
 ```json
-    { 
-         
+    {
+
         "apiKey": "change-me-to-the-api-key-created-in-satellite-gui",
         "satelliteURL": "us-central-1.tardigrade.io:7777",
         "bucketName": "change-me-to-desired-bucket-name",
@@ -81,7 +75,7 @@ $ go build storj-nextcloud.go
 
 * Connect and transfer file(s)/folder(s) from a desired NextCloud account to desired Storj Bucket
     * **Note** : Path should be `/` for full Back-Up and filepath/folderpath should be in the form `/path/to/file_or_folder`
-``` 
+```
     $ ./storj-nextcloud.go store ./config/nextcloud_property.json ./config/storj_config.json key filePath/folderPath
 ```
 
@@ -90,7 +84,7 @@ $ go build storj-nextcloud.go
     $ ./storj-nextcloud.go store debug ./config/nextcloud_property.json ./config/storj_config.json key filePath/folderPath
 ```
 
-* Read NextCloud instance property from a desired JSON file and display all the contents in the NextCloud account. 
+* Read NextCloud instance property from a desired JSON file and display all the contents in the NextCloud account.
     * **Note** : filename arguments are optional. Default locations are used.
 ```
     $ ./storj-nextcloud.go parse
@@ -102,7 +96,7 @@ $ go build storj-nextcloud.go
     $ ./storj_nextcloud.go parse debug
 ```
 
-* Read and parse Storj network's configuration, in JSON format, from a desired file and upload a sample object 
+* Read and parse Storj network's configuration, in JSON format, from a desired file and upload a sample object
     * **Note** : filename arguments are optional. Default locations are used.
 ```
     $ ./storj_nextcloud.go test
@@ -113,4 +107,3 @@ $ go build storj-nextcloud.go
 ```
     $ ./storj_nextcloud.go test debug
 ```
- 
