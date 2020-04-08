@@ -13,11 +13,10 @@ $ go get
 ```
 
 ## Build ONCE
-```
-$ go build storj-nextcloud.go
-```
 
-
+```
+$ go build storj-nextcloud/storj-nextcloud.go
+```
 
 ## Set-up Files
 * Create a `nextcloud_property.json` file with following contents about a NextCloud instance:
